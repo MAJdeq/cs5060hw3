@@ -28,10 +28,6 @@ def monte_carlo_option_pricing(price_paths, strike, risk_free_rate):
     return final_prices, call_payoffs
 
 
-
-
-
-
 if __name__ == "__main__":
     price_paths = simulate_geometric_brownian_motion(100, 0.03, 17.04, 1/365, 1, 5000)
     for i in range(10):
