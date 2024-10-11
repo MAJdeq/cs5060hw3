@@ -7,12 +7,8 @@ import numpy as np
 def readFile(filename):
     # Read the single column data
     df = pd.read_csv(filename, header=None, names=['Daily Returns'])
-
-    # Convert the index to a date range
-    # Assuming the data is daily and starts from today
-    df.index = pd.date_range(end=pd.Timestamp.today(), periods=len(df), freq='D')
-
-    return df
+    l = df['Daily Returns']
+    return [0 if i == 0 else l[i] - l[i-1] for i in range(len(l))]
 
 
 def plotNormalReturns(df, filename):
@@ -22,6 +18,8 @@ def plotNormalReturns(df, filename):
 
     # Perform Kolmogorov-Smirnov test
     ks_statistic, p_value = stats.kstest(df, 'norm', args=(mean, std))
+
+    print(f"K Statistic: {ks_statistic}, p-value: {p_value}")
 
     # Plot histogram of the data
     plt.figure(figsize=(10, 6))
@@ -44,13 +42,13 @@ def plotNormalReturns(df, filename):
     plt.show()
     plt.close()
 
-def plotLogNormReturns(df, filename):
+def plotBetaReturns(df, filename):
 
-    shape, loc, scale = stats.lognorm.fit(df['Daily Returns'])
-
+    # Unpack four parameters from beta distribution fit
+    a, b, loc, scale = stats.beta.fit(df)
 
     # Perform Kolmogorov-Smirnov test
-    ks_statistic, p_value = stats.kstest(df, 'lognorm', args=(shape, loc, scale))
+    ks_statistic, p_value = stats.kstest(df, 'beta', args=(a, b, loc, scale))
 
     print(f"KS Statistic: {ks_statistic}, p-value: {p_value}")
 
@@ -62,17 +60,18 @@ def plotLogNormReturns(df, filename):
     xmin, xmax = plt.xlim()
     x = np.linspace(xmin, xmax, 100)
 
-    # Plot the PDF of the fitted normal distribution
-    pdf = stats.lognorm.pdf(x, shape, loc, scale)
-    plt.plot(x, pdf, 'r-', linewidth=2, label=f'Fitted LogNorm (shape={shape:.2f}, loc={loc:.2f}, scale={scale:.2f})')
-    plt.title(f'Histogram and Fitted Distribution of {filename.capitalize()}')
+    # Plot the PDF of the fitted beta distribution
+    pdf = stats.beta.pdf(x, a, b, loc, scale)
+    plt.plot(x, pdf, 'r-', linewidth=2, label=f'Fitted Beta (a={a:.2f}, b={b:.2f}, loc={loc:.2f}, scale={scale:.2f})')
+    plt.title(f'Histogram and Fitted Beta Distribution of {filename.capitalize()}')
     plt.xlabel('Daily Returns')
     plt.ylabel('Density')
     plt.legend()
     plt.grid(True)
-    plt.savefig(f'assets/{filename}LogNormal.png')
+    plt.savefig(f'assets/{filename}Beta.png')
     plt.show()
     plt.close()
+
 
 
 
@@ -80,10 +79,10 @@ def plotLogNormReturns(df, filename):
 if __name__ == "__main__":
     try:
         stock1_data = readFile('stock1.csv')
-        stock2_data = readFile('stock2-1.csv')
+        stock2_data = readFile('stock2.csv')
         plotNormalReturns(stock1_data, 'stock1')
         plotNormalReturns(stock2_data, 'stock2')
-        plotLogNormReturns(stock1_data, 'stock1')
-        plotLogNormReturns(stock2_data, 'stock2')
+        plotBetaReturns(stock1_data, 'stock1')
+        plotBetaReturns(stock2_data, 'stock2')
     except Exception as e:
         print(f"An error occurred: {e}")
