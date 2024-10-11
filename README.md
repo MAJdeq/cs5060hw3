@@ -19,4 +19,10 @@
 
 *PART TWO*
 * After performing, the monte carlo simulation based on the characteristics of our asset, we calculated the payoff of the option at maturity was $761.88. The following figure is a model displaying the first 10 paths for the stock:
-![StockTwo](https://github.com/MAJdeq/cs5060hw3/blob/main/assets/stock2Beta.png)
+![image](https://github.com/user-attachments/assets/c1a6aed1-03bf-4b2e-bfcc-fc6285530685)
+
+
+*PART THREE*
+* Using the beta distribution for to model the stock price for both stocks, we simulated the price paths for both stocks over a year period, and simulated the future price paths and option prices.
+ * Scenario 1: The option that pays off if it outperforms the average value of Stock 1 and Stock 2 at maturity was $63.27.
+ * Scenario 2: The option that pays off if it outperforms the maximum value of either Stock 1 or Stock 2 at maturity was $63.27.
