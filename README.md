@@ -4,6 +4,21 @@
 * Ethan Ford
 * Nathan Freestone
 
+*RUNNING INSTRUCTIONS*
+* This code has the following dependencies:
+  - pandas
+  - matplotlib
+  - scipy
+  - numpy
+
+each part has a dedicated python file. To execute them, run:
+
+```bash
+python partOne.py
+```
+
+substitute your python file as needed.
+
 *PART ONE*
 
 * Here are the plots for both stock datasets fitted on a normal distribution:
